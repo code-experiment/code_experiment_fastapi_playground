@@ -37,6 +37,7 @@ $ venv\Scripts\activate
 ```
 (venv) $ pip install -r requirements.txt
 ```
+> You might need to remove the `uvloop` package on windows.
 
 ## Run The Uvicorn Server
 > Make sure you are inside the `code_experiment_playground` folder when you run this command.
