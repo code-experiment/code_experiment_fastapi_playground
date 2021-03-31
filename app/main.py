@@ -1,6 +1,4 @@
-from typing import Optional
-from fastapi import FastAPI, Query, Depends
-from pydantic import BaseModel
+from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
@@ -24,6 +22,6 @@ def create_todo(todo: schemas.TodoCreate, db: Session = Depends(get_db)):
     return crud.create_todo(db, todo=todo)
 
 
-@app.get("/{todo_id}")
-def hello(todo_id: int, name: Optional[str] = None, email: Optional[str] = Query(None, max_length=10, deprecated=True)):
-    return {"todo_id": todo_id, "name": name, "email": email}
+@app.post("/create_user", response_model=schemas.User)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    return crud.create_user(db, user=user)
