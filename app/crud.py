@@ -3,8 +3,8 @@ from . import models, schemas
 from app.authentication import Hash
 
 
-def create_todo(db: Session, todo: schemas.TodoCreate):
-    new_todo = models.Todo(**todo.dict())
+def create_todo(db: Session, todo: schemas.TodoCreate, user_id: int):
+    new_todo = models.Todo(**todo.dict(), owner_id=user_id)
     db.add(new_todo)
     db.commit()
     db.refresh(new_todo)
