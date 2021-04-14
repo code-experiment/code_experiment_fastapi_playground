@@ -47,3 +47,11 @@ $ venv\Scripts\activate
 
 ## Interactive Docs
 Open your favorite browser and head to http://localhost:8000/docs for the docs.
+
+## Running tests
+We're using pytest for our testing you can learn more at https://docs.pytest.org/en/stable/
+
+- Run all tests
+```
+(venv) $ python -m pytest
+```

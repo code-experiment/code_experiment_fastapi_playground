@@ -27,4 +27,8 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 
 def get_user(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if db_user:
+        return db_user
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST, detail="User Not Found")
