@@ -2,13 +2,13 @@ import pytest
 
 
 @pytest.mark.users
-def test_create_new_user(test_db_session, client):
+def test_create_new_user(test_db_session, credentials, client):
 
     # Arrange
     url = '/create-user'
     payload = {
-        "username": "test1",
-        "password": "test1"
+        "username": credentials.get('username'),
+        "password": credentials.get('password')
     }
 
     # Act
@@ -17,18 +17,18 @@ def test_create_new_user(test_db_session, client):
 
     # Assert
     assert response.status_code == 200
-    assert body['username'] == 'test1'
+    assert body['username'] == credentials.get('username')
     assert len(body['todos']) == 0
 
 
 @pytest.mark.users
-def test_create_user_raises_username_taken(test_db_session, create_single_user, client):
+def test_create_user_raises_username_taken(test_db_session, create_single_user, credentials, client):
 
     # Arrange
     url = '/create-user'
     payload = {
-        "username": "test1",
-        "password": "test1"
+        "username": credentials.get('username'),
+        "password": credentials.get('password')
     }
 
     # Act
