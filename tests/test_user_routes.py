@@ -1,13 +1,33 @@
-import requests
+import pytest
 
 
-def test_get_user():
+@pytest.mark.users
+def test_create_new_user(test_db_session, client):
 
     # Arrange
-    url = 'http://localhost:8000/get-user/1'
+    url = '/create-user'
+    payload = {
+        "username": "test1",
+        "password": "test1"
+    }
 
     # Act
-    response = requests.get(url)
+    response = client.post(url, json=payload)
+    body = response.json()
+
+    # Assert
+    assert response.status_code == 200
+    assert body['username'] == 'test1'
+    assert len(body['todos']) == 0
+
+
+@pytest.mark.users
+def test_get_user(create_single_user, client):
+    # Arrange
+    url = '/get-user/1'
+
+    # Act
+    response = client.get(url)
     body = response.json()
 
     # Assert
@@ -16,13 +36,14 @@ def test_get_user():
     assert 1 is body['id']
 
 
-def test_get_user_raises_user_not_found():
+@pytest.mark.users
+def test_get_user_raises_user_not_found(client):
 
     # Arrange
-    url = 'http://localhost:8000/get-user/1120398'
+    url = '/get-user/1120398'
 
     # Act
-    response = requests.get(url)
+    response = client.get(url)
     body = response.json()
 
     # Assert
