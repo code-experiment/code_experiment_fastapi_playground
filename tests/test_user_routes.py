@@ -68,3 +68,34 @@ def test_get_user_raises_user_not_found(client):
     # Assert
     assert response.status_code == 400
     assert 'User Not Found' in body['detail']
+
+
+@pytest.mark.users
+def test_delete_user(login, client):
+    # Arrange
+    url = '/delete-user'
+    headers = {
+        "Authorization": f"Bearer {login['access_token']}"
+    }
+
+    # Act
+    response = client.delete(url, headers=headers)
+    body = response.json()
+
+    # Assert
+    assert response.status_code == 200
+    assert body["message"] == "User Successfully Deleted"
+
+
+@pytest.mark.users
+def test_delete_user_raises_not_authenticated(client):
+    # Arrange
+    url = '/delete-user'
+
+    # Act
+    response = client.delete(url)
+    body = response.json()
+
+    # Assert
+    assert response.status_code == 401
+    assert body["detail"] == "Not authenticated"
