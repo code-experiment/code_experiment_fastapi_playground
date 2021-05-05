@@ -1,3 +1,4 @@
+from app import models
 import pytest
 
 
@@ -85,6 +86,31 @@ def test_delete_user(login, client):
     # Assert
     assert response.status_code == 200
     assert body["message"] == "User Successfully Deleted"
+
+
+# TODO:  Possibly create a function inside the conftest for creating a todo
+@pytest.mark.users
+def test_delete_user_deletes_users_todos(test_db_session, login, client):
+    # Arrange
+    create_todo_url = '/create-todo'
+    delete_url = '/delete-user'
+    payload = {
+        "title": "Buy Milk",
+        "complete": False
+    }
+    headers = {
+        "Authorization": f"Bearer {login['access_token']}"
+    }
+
+    # Act
+    client.post(create_todo_url, headers=headers, json=payload)
+    response = client.delete(delete_url, headers=headers)
+    body = response.json()
+
+    # Assert
+    assert response.status_code == 200
+    assert body["message"] == "User Successfully Deleted"
+    assert test_db_session.query(models.Todo).filter(models.Todo.owner_id == 1).first() is None
 
 
 @pytest.mark.users
