@@ -12,8 +12,13 @@ def create_todo(db: Session, todo: schemas.TodoCreate, user_id: int):
     return new_todo
 
 
+def get_todos(db: Session, user_id: int):
+    user_todos = db.query(models.Todo).filter(models.Todo.owner_id == user_id).all()
+    return {"todos": user_todos}
+
+
 def create_user(db: Session, user: schemas.UserCreate):
-    db_user = db.query(models.User).filter(
+    db_user = db_user = db.query(models.User).filter(
         models.User.username == user.username).first()
     if db_user is None:
         new_user = models.User(

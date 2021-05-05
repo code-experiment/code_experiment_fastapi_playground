@@ -6,8 +6,8 @@ from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy_utils import database_exists, create_database, drop_database
 from app.database import Base, get_db
 from app.main import app
-from app.schemas import UserCreate
-from app.crud import create_user
+from app.schemas import TodoCreate, UserCreate
+from app.crud import create_user, create_todo
 
 SQLALCHEMY_DATABASE_URL = os.environ.get(
     "POSTGRES_URL_TEST", "sqlite:///./test_db.db")
@@ -72,6 +72,12 @@ def credentials():
 def create_single_user(test_db_session, credentials):
     new_user = UserCreate(**credentials)
     create_user(test_db_session, new_user)
+
+
+@pytest.fixture
+def create_single_todo(test_db_session, login):
+    new_todo = TodoCreate(title="Buy Milk", complete=False)
+    create_todo(db=test_db_session, todo=new_todo, user_id=1)
 
 
 @pytest.fixture

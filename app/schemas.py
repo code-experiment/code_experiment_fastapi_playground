@@ -27,6 +27,10 @@ class Todo(TodoBase):
         orm_mode = True
 
 
+class Todos(BaseModel):
+    todos: List[Todo] = []
+
+
 class UserBase(BaseModel):
     username: str
 
