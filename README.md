@@ -39,10 +39,10 @@ $ venv\Scripts\activate
 > Make sure you are inside the `code_experiment_playground` folder when you run this command.
 
 ```
-(venv) $ pip install -r requirements.txt
+(venv) $ pipenv install
 ```
 
-> You might need to remove the `uvloop` package on windows.
+> You might need to change the version of python
 
 ## Run The Uvicorn Server
 
