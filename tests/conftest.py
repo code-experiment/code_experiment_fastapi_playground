@@ -77,7 +77,7 @@ def create_single_user(test_db_session, credentials):
 @pytest.fixture
 def create_single_todo(test_db_session, login):
     new_todo = TodoCreate(title="Buy Milk", complete=False)
-    create_todo(db=test_db_session, todo=new_todo, user_id=1)
+    return create_todo(db=test_db_session, todo=new_todo, user_id=1)
 
 
 @pytest.fixture

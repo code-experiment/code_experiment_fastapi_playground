@@ -58,4 +58,46 @@ def test_get_user_todos_has_todos(login, client, create_single_todo):
     # Assert
     assert response.status_code == 200
     assert isinstance(body['todos'], list)
-    assert len(body['todos']) >= 1
+    assert len(body['todos']) == 1
+
+
+@pytest.mark.todos
+def test_mark_todo_complete(login, client, create_single_todo):
+    url = f"/toggle-complete/{create_single_todo.id}"
+    headers = {
+        "Authorization": f"Bearer {login['access_token']}"
+    }
+
+    response = client.patch(url, headers=headers)
+    body = response.json()
+    assert response.status_code == 200
+    assert body["complete"] is True
+
+
+@pytest.mark.todos
+def test_toggle_todo_complete_to_uncomplete(login, client, create_single_todo):
+    url = f"/toggle-complete/{create_single_todo.id}"
+    headers = {
+        "Authorization": f"Bearer {login['access_token']}"
+    }
+
+    response = client.patch(url, headers=headers)
+    body = response.json()
+    assert response.status_code == 200
+    assert body["complete"] is True
+
+    second_response = client.patch(url, headers=headers)
+    second_body = second_response.json()
+    assert second_response.status_code == 200
+    assert second_body["complete"] is False
+
+
+@pytest.mark.todos
+def test_mark_todo_complete_raises_not_authenticated(client, create_single_todo):
+    url = f"/toggle-complete/{create_single_todo.id}"
+
+    response = client.patch(url)
+    body = response.json()
+
+    assert response.status_code == 401
+    assert body["detail"] == "Not authenticated"

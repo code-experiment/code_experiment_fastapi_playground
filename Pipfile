@@ -15,6 +15,7 @@ sqlalchemy-utils = "*"
 python-jose = {extras = ["cryptography"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
 python-multipart = "*"
+autopep8 = "*"
 
 [requires]
 python_version = "3.8"

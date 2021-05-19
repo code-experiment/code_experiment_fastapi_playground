@@ -13,8 +13,17 @@ def create_todo(db: Session, todo: schemas.TodoCreate, user_id: int):
 
 
 def get_todos(db: Session, user_id: int):
-    user_todos = db.query(models.Todo).filter(models.Todo.owner_id == user_id).all()
+    user_todos = db.query(models.Todo).filter(
+        models.Todo.owner_id == user_id).all()
     return {"todos": user_todos}
+
+
+def toggle_complete(db: Session, todo_id: int):
+    todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
+    todo.complete = not todo.complete
+    db.commit()
+    db.refresh(todo)
+    return todo
 
 
 def create_user(db: Session, user: schemas.UserCreate):
