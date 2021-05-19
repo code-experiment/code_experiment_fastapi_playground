@@ -84,6 +84,22 @@ We're using pytest for our testing you can learn more at https://docs.pytest.org
 (venv) $ python -m pytest -m marker_name
 ```
 
+## Debugging Tests
+
+The following steps are for vscode.
+
+- Open your command palette
+  - MAC: `cmd` + `shift` + `p`
+  - PC: `ctrl` + `shift` + `p`
+- Type `configure tests` and push enter
+- Highlight `pytest` and push enter
+- Highlight `tests` for the `tests` directory and push enter
+
+You should have a `.vscode` folder with a `settings.json` when finished.  You should have a new icon on the left that looks like a test beaker.  You should also be able to see `run test` and `debug test` on all your tests now.  If not try to reload vscode.
+
+> A key to this working was adding a `__init__.py` file in the tests directory.  Without that file I wasn't able to discover the tests.  I got this information from https://stackoverflow.com/a/55839418/12313312
+
+
 ## Testing
 
 - Fixtures:
