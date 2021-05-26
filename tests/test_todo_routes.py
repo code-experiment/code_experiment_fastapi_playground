@@ -93,7 +93,7 @@ def test_toggle_todo_complete_to_uncomplete(login, client, create_single_todo):
 
 
 @pytest.mark.todos
-def test_user_marks_second_user_todo_complete_raises_error(login, client, create_single_todo):
+def test_user_marks_second_user_todo_complete_raises_error(client, create_single_todo):
     # Create Second User
     second_user_url = '/create-user'
     second_user_payload = {

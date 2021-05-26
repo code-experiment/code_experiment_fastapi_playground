@@ -71,13 +71,13 @@ def credentials():
 @pytest.fixture
 def create_single_user(test_db_session, credentials):
     new_user = UserCreate(**credentials)
-    create_user(test_db_session, new_user)
+    return create_user(test_db_session, new_user)
 
 
 @pytest.fixture
-def create_single_todo(test_db_session, login):
+def create_single_todo(test_db_session, create_single_user):
     new_todo = TodoCreate(title="Buy Milk", complete=False)
-    return create_todo(db=test_db_session, todo=new_todo, user_id=1)
+    return create_todo(db=test_db_session, todo=new_todo, user_id=create_single_user.id)
 
 
 @pytest.fixture
