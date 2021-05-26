@@ -18,12 +18,15 @@ def get_todos(db: Session, user_id: int):
     return {"todos": user_todos}
 
 
-def toggle_complete(db: Session, todo_id: int):
+def toggle_complete(db: Session, todo_id: int, current_user_id):
     todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
-    todo.complete = not todo.complete
-    db.commit()
-    db.refresh(todo)
-    return todo
+    if current_user_id == todo.owner_id:
+        todo.complete = not todo.complete
+        db.commit()
+        db.refresh(todo)
+        return todo
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                        detail=f"Not authenticated")
 
 
 def create_user(db: Session, user: schemas.UserCreate):

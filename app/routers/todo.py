@@ -18,4 +18,4 @@ def get_todos(db: Session = Depends(get_db), current_user: schemas.User = Depend
 
 @router.patch("/toggle-complete/{todo_id}", response_model=schemas.Todo)
 def toggle_complete(todo_id: int, db: Session = Depends(get_db),  current_user: schemas.User = Depends(authentication.get_current_user)):
-    return crud.toggle_complete(db=db, todo_id=todo_id)
+    return crud.toggle_complete(db=db, todo_id=todo_id, current_user_id=current_user.id)

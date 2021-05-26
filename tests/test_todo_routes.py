@@ -93,6 +93,32 @@ def test_toggle_todo_complete_to_uncomplete(login, client, create_single_todo):
 
 
 @pytest.mark.todos
+def test_unauthorized_user_raises_error_for_mark_complete(login, client, create_single_todo):
+    # Create Second User
+    second_user_url = '/create-user'
+    second_user_payload = {
+        "username": "test2",
+        "password": "test2"
+    }
+    client.post(second_user_url, json=second_user_payload)
+
+    # Login Second User
+    second_user_login_url = "/login"
+    second_user_login_response = client.post(second_user_login_url, data=second_user_payload)
+    second_user_login_body = second_user_login_response.json()
+    second_user_headers = {
+        "Authorization": f"Bearer {second_user_login_body['access_token']}"
+    }
+
+    # Mark first users first todo complete
+    toggle_complete_url = f"/toggle-complete/{create_single_todo.id}"
+    toggle_complete_response = client.patch(toggle_complete_url, headers=second_user_headers)
+    toggle_complete_body = toggle_complete_response.json()
+
+    assert toggle_complete_body["detail"] == "Not authenticated"
+
+
+@pytest.mark.todos
 def test_mark_todo_complete_raises_not_authenticated(client, create_single_todo):
     url = f"/toggle-complete/{create_single_todo.id}"
 
