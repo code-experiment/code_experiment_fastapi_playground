@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app import schemas, crud, authentication
 from app.database import get_db
 
-router = APIRouter()
+router = APIRouter(tags=["Todos"])
 
 
 @router.post("/create-todo", response_model=schemas.Todo)
