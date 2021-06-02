@@ -129,3 +129,28 @@ def test_mark_todo_complete_raises_not_authenticated(client, create_single_todo)
 
     assert response.status_code == 401
     assert body["detail"] == "Not authenticated"
+
+
+@pytest.mark.todos
+def test_delete_todo_with_authenticated_user(login, create_single_todo, client):
+    url = f"/delete-todo/{create_single_todo.id}"
+    headers = {
+        "Authorization": f"Bearer {login['access_token']}"
+    }
+
+    response = client.delete(url, headers=headers)
+    body = response.json()
+
+    assert response.status_code == 200
+    assert body["detail"] == f"Todo with id#{create_single_todo.id} deleted"
+
+
+@pytest.mark.todos
+def test_delete_todo_raises_not_authenticated(client, create_single_todo):
+    url = f"/delete-todo/{create_single_todo.id}"
+
+    response = client.delete(url)
+    body = response.json()
+
+    assert response.status_code == 401
+    assert body["detail"] == "Not authenticated"

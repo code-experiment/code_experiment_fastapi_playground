@@ -29,6 +29,16 @@ def toggle_complete(db: Session, todo_id: int, current_user_id):
                         detail=f"Not authenticated")
 
 
+def delete_todo(db: Session, todo_id: int, current_user_id: int):
+    todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
+    if current_user_id == todo.owner_id:
+        db.delete(todo)
+        db.commit()
+        return {"detail": f"Todo with id#{todo.id} deleted"}
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                        detail=f"Not authenticated")
+
+
 def create_user(db: Session, user: schemas.UserCreate):
     db_user = db_user = db.query(models.User).filter(
         models.User.username == user.username).first()

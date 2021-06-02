@@ -31,6 +31,10 @@ class Todos(BaseModel):
     todos: List[Todo] = []
 
 
+class TodoDelete(BaseModel):
+    detail: str
+
+
 class UserBase(BaseModel):
     username: str
 

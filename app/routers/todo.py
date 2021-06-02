@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from fastapi.param_functions import Path
 from sqlalchemy.orm import Session
 from app import schemas, crud, authentication
 from app.database import get_db
@@ -19,3 +20,8 @@ def get_todos(db: Session = Depends(get_db), current_user: schemas.User = Depend
 @router.patch("/toggle-complete/{todo_id}", response_model=schemas.Todo)
 def toggle_complete(todo_id: int, db: Session = Depends(get_db),  current_user: schemas.User = Depends(authentication.get_current_user)):
     return crud.toggle_complete(db=db, todo_id=todo_id, current_user_id=current_user.id)
+
+
+@router.delete("/delete-todo/{todo_id}", response_model=schemas.TodoDelete)
+def delete_todo(todo_id: int = Path(None, description="The ID of the todo to delete"), db: Session = Depends(get_db),  current_user: schemas.User = Depends(authentication.get_current_user)):
+    return crud.delete_todo(db=db, todo_id=todo_id, current_user_id=current_user.id)
