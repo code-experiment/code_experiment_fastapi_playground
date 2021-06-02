@@ -104,7 +104,8 @@ def test_user_marks_second_user_todo_complete_raises_error(client, create_single
 
     # Login Second User
     second_user_login_url = "/login"
-    second_user_login_response = client.post(second_user_login_url, data=second_user_payload)
+    second_user_login_response = client.post(
+        second_user_login_url, data=second_user_payload)
     second_user_login_body = second_user_login_response.json()
     second_user_headers = {
         "Authorization": f"Bearer {second_user_login_body['access_token']}"
@@ -112,7 +113,8 @@ def test_user_marks_second_user_todo_complete_raises_error(client, create_single
 
     # Mark first users first todo complete
     toggle_complete_url = f"/toggle-complete/{create_single_todo.id}"
-    toggle_complete_response = client.patch(toggle_complete_url, headers=second_user_headers)
+    toggle_complete_response = client.patch(
+        toggle_complete_url, headers=second_user_headers)
     toggle_complete_body = toggle_complete_response.json()
 
     assert toggle_complete_body["detail"] == "Not authenticated"

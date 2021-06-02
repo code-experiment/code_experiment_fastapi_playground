@@ -34,7 +34,6 @@ def get_current_user(data: str = Depends(oauth2_scheme), db: Session = Depends(g
     return db_user
 
 
-
 def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)

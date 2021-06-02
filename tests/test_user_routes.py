@@ -110,7 +110,8 @@ def test_delete_user_deletes_users_todos(test_db_session, login, client):
     # Assert
     assert response.status_code == 200
     assert body["message"] == "User Successfully Deleted"
-    assert test_db_session.query(models.Todo).filter(models.Todo.owner_id == 1).first() is None
+    assert test_db_session.query(models.Todo).filter(
+        models.Todo.owner_id == 1).first() is None
 
 
 @pytest.mark.users
