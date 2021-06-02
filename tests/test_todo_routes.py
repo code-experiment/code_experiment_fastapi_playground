@@ -20,7 +20,7 @@ def test_create_new_todo(login, client):
     # Assert
     assert response.status_code == 200
     assert body['title'] == 'Buy Milk'
-    assert body['complete'] == False
+    assert body['complete'] is False
     assert body['id'] == 1
     assert body['owner_id'] == 1
 
