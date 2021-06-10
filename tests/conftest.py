@@ -9,10 +9,12 @@ from app.main import app
 from app.schemas import TodoCreate, UserCreate
 from app.crud import create_user, create_todo
 
-SQLALCHEMY_DATABASE_URL = os.environ.get(
-    "POSTGRES_URL_TEST", "sqlite:///./test_db.db")
+SQLALCHEMY_DATABASE_URL = "sqlite:///./test_db.db"
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+# check_same_thread was a fix for an error during testing on github
+# timeout was a fix for an error during heroku build for sqlite and I decided to keep it for testing
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={
+                       "check_same_thread": False, 'timeout': 15})
 
 
 def get_test_db():
