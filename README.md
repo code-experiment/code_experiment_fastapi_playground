@@ -109,3 +109,12 @@ You should have a `.vscode` folder with a `settings.json` when finished.  You sh
   - https://github.com/timhughes/example-fastapi-sqlachemy-pytest
 - Configuration:
   - https://docs.pytest.org/en/stable/customize.html
+
+## Deployment
+
+The app is currently setup to work with `Heroku` and `Heroku-Postgres`
+
+- Create a new app on `Heroku`
+- Under the deploy tab follow the steps for `Existing Git repository`
+- Add `Heroku-Postgres` as an `Add-on`
+- Run the command `git push heroku main`
