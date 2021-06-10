@@ -5,6 +5,9 @@ from sqlalchemy.orm import sessionmaker
 SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 
+# connect_args might not be needed
+# check_same_thread was a fix for an error during testing
+# timeout was a fix for an error during heroku build for sqlite
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False, 'timeout': 15}
 )
