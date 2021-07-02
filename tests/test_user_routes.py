@@ -18,8 +18,8 @@ def test_create_new_user(test_db_session, credentials, client):
 
     # Assert
     assert response.status_code == 200
-    assert body['username'] == credentials.get('username')
-    assert len(body['todos']) == 0
+    assert "access_token" in body
+    assert body["token_type"] == "bearer"
 
 
 @pytest.mark.users

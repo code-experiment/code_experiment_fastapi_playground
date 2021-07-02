@@ -21,29 +21,11 @@ def test_login(test_db_session, create_single_user, credentials, client):
 
 
 @pytest.mark.auth
-def test_login_raises_incorrect_username(credentials, client):
+def test_login_with_invalid_user_raises_error(client):
     # Arrange
     url = '/login'
     payload = {
-        "username": credentials.get('username'),
-        "password": credentials.get('password')
-    }
-
-    # Act
-    response = client.post(url, data=payload)
-    body = response.json()
-
-    # Assert
-    assert response.status_code == 404
-    assert body["detail"] == "Incorrect Username"
-
-
-@pytest.mark.auth
-def test_login_raises_incorrect_password(create_single_user, credentials, client):
-    # Arrange
-    url = '/login'
-    payload = {
-        "username": credentials.get('username'),
+        "username": "WRONG_USERNAME",
         "password": "WRONG_PASSWORD"
     }
 
@@ -52,5 +34,23 @@ def test_login_raises_incorrect_password(create_single_user, credentials, client
     body = response.json()
 
     # Assert
-    assert response.status_code == 404
-    assert body["detail"] == "Incorrect Password"
+    assert response.status_code == 401
+    assert body["detail"] == "Incorrect username or password."
+
+
+@pytest.mark.auth
+def test_login_with_wrong_password_raises_error(create_single_user, client):
+    # Arrange
+    url = '/login'
+    payload = {
+        "username": create_single_user.username,
+        "password": "WRONG_PASSWORD"
+    }
+
+    # Act
+    response = client.post(url, data=payload)
+    body = response.json()
+
+    # Assert
+    assert response.status_code == 401
+    assert body["detail"] == "Incorrect username or password."

@@ -6,9 +6,12 @@ from app.database import get_db
 router = APIRouter(tags=["Users"])
 
 
-@router.post("/create-user", response_model=schemas.User)
+@router.post("/create-user", response_model=schemas.Token)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    return crud.create_user(db, user=user)
+    new_user = crud.create_user(db, user=user)
+    access_token = authentication.create_access_token(
+        data={"username": new_user.username, "id": new_user.id})
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
 @router.get('/get-user/{user_id}', response_model=schemas.User)
