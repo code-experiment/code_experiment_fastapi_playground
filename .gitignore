@@ -6,3 +6,5 @@ __pycache__
 sql_app.db
 .pytest_cache
 test_db.db
+html_cov_report
+.coverage

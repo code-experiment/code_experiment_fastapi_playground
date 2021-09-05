@@ -95,10 +95,19 @@ The following steps are for vscode.
 - Highlight `pytest` and push enter
 - Highlight `tests` for the `tests` directory and push enter
 
-You should have a `.vscode` folder with a `settings.json` when finished.  You should have a new icon on the left that looks like a test beaker.  You should also be able to see `run test` and `debug test` on all your tests now.  If not try to reload vscode.
+You should have a `.vscode` folder with a `settings.json` when finished. You should have a new icon on the left that looks like a test beaker. You should also be able to see `run test` and `debug test` on all your tests now. If not try to reload vscode.
 
-> A key to this working was adding a `__init__.py` file in the tests directory.  Without that file I wasn't able to discover the tests.  I got this information from https://stackoverflow.com/a/55839418/12313312
+> A key to this working was adding a `__init__.py` file in the tests directory. Without that file I wasn't able to discover the tests. I got this information from https://stackoverflow.com/a/55839418/12313312
 
+## Running tests and generating coverage
+
+- https://pypi.org/project/pytest-cov/
+- `python -m pytest --cov-report html:html_cov_report --cov=app tests/`
+
+## Running tests and displaying coverage report in the terminal
+
+- https://pypi.org/project/pytest-cov/
+- `python -m pytest --cov-report term --cov=app tests/`
 
 ## Testing
 
