@@ -17,6 +17,7 @@ passlib = {extras = ["bcrypt"], version = "*"}
 python-multipart = "*"
 autopep8 = "*"
 psycopg2-binary = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.8"
