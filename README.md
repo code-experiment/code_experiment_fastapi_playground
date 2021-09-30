@@ -127,3 +127,7 @@ The app is currently setup to work with `Heroku` and `Heroku-Postgres`
 - Under the deploy tab follow the steps for `Existing Git repository`
 - Add `Heroku-Postgres` as an `Add-on`
 - Run the command `git push heroku main`
+
+## Environment Variables
+
+Read more into this at https://fastapi.tiangolo.com/advanced/settings/
