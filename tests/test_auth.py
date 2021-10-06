@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.mark.auth
-def test_login(test_db_session, create_single_user, credentials, client):
+def test_login(session, create_single_user, credentials, client):
     # Arrange
     url = '/login'
     payload = {
