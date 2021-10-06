@@ -1,68 +1,34 @@
-# TODO: Possibly look into this https://stackoverflow.com/questions/67255653/how-to-set-up-and-tear-down-a-database-between-tests-in-fastapi
+# TODO:  Possibly think of a fixture that is autouse that creates a user with a todo
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy_utils import database_exists, create_database, drop_database
+from sqlalchemy.orm import Session
+from sqlalchemy.pool import StaticPool
 from app.database import Base, get_db
 from app.main import app
 from app.schemas import TodoCreate, UserCreate
 from app.crud import create_user, create_todo
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test_db.db"
 
-# check_same_thread was a fix for an error during testing on github
-# timeout was a fix for an error during heroku build for sqlite and I decided to keep it for testing
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={
-                       "check_same_thread": False, 'timeout': 15})
-
-
-def get_test_db():
-    SessionLocal = sessionmaker(bind=engine)
-    test_db = SessionLocal()
-
-    try:
-        yield test_db
-    finally:
-        test_db.close()
+@pytest.fixture(name="session")
+def session_fixture():
+    engine = create_engine(
+        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
+    )
+    Base.metadata.create_all(bind=engine)
+    with Session(engine) as session:
+        yield session
 
 
-@pytest.fixture(scope="session", autouse=True)
-def create_test_database():
-    """
-    Create a clean database on every test case.
-    We use the `sqlalchemy_utils` package here for a few helpers in consistently
-    creating and dropping the database.
-    """
-    if database_exists(SQLALCHEMY_DATABASE_URL):
-        drop_database(SQLALCHEMY_DATABASE_URL)
-    create_database(SQLALCHEMY_DATABASE_URL)  # Create the test database.
-    Base.metadata.create_all(engine)  # Create the tables.
-    # Mock the Database Dependency
-    app.dependency_overrides[get_db] = get_test_db
-    yield  # Run the tests.
-    drop_database(SQLALCHEMY_DATABASE_URL)  # Drop the test database.
+@pytest.fixture(name="client")
+def client_fixture(session: Session):
+    def get_session_override():
+        return session
 
-
-@pytest.fixture
-def test_db_session():
-    """Returns an sqlalchemy session, and after the test tears down everything properly."""
-
-    SessionLocal = sessionmaker(bind=engine)
-
-    session: Session = SessionLocal()
-    yield session
-    # Drop all data after each test
-    for tbl in reversed(Base.metadata.sorted_tables):
-        engine.execute(tbl.delete())
-    # put back the connection to the connection pool
-    session.close()
-
-
-@pytest.fixture(scope="module")
-def client():
-    with TestClient(app) as c:
-        yield c
+    app.dependency_overrides[get_db] = get_session_override
+    client = TestClient(app)
+    yield client
+    app.dependency_overrides.clear()
 
 
 @pytest.fixture
@@ -71,15 +37,15 @@ def credentials():
 
 
 @pytest.fixture
-def create_single_user(test_db_session, credentials):
+def create_single_user(session: Session, credentials: dict):
     new_user = UserCreate(**credentials)
-    return create_user(test_db_session, new_user)
+    return create_user(session, new_user)
 
 
 @pytest.fixture
-def create_single_todo(test_db_session, create_single_user):
+def create_single_todo(session: Session, create_single_user):
     new_todo = TodoCreate(title="Buy Milk", complete=False)
-    return create_todo(db=test_db_session, todo=new_todo, user_id=create_single_user.id)
+    return create_todo(db=session, todo=new_todo, user_id=create_single_user.id)
 
 
 @pytest.fixture

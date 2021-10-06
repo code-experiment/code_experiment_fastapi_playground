@@ -3,7 +3,7 @@ import pytest
 
 
 @pytest.mark.users
-def test_create_new_user(test_db_session, credentials, client):
+def test_create_new_user(session, credentials, client):
 
     # Arrange
     url = '/create-user'
@@ -23,7 +23,7 @@ def test_create_new_user(test_db_session, credentials, client):
 
 
 @pytest.mark.users
-def test_create_user_raises_username_taken(test_db_session, create_single_user, credentials, client):
+def test_create_user_raises_username_taken(session, create_single_user, credentials, client):
 
     # Arrange
     url = '/create-user'
@@ -89,7 +89,7 @@ def test_delete_user(login, client):
 
 # TODO:  Possibly create a function inside the conftest for creating a todo
 @pytest.mark.users
-def test_delete_user_deletes_users_todos(test_db_session, login, client):
+def test_delete_user_deletes_users_todos(session, login, client):
     # Arrange
     create_todo_url = '/create-todo'
     delete_url = '/delete-user'
@@ -109,7 +109,7 @@ def test_delete_user_deletes_users_todos(test_db_session, login, client):
     # Assert
     assert response.status_code == 200
     assert body["message"] == "User Successfully Deleted"
-    assert test_db_session.query(models.Todo).filter(
+    assert session.query(models.Todo).filter(
         models.Todo.owner_id == 1).first() is None
 
 
